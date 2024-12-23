@@ -124,7 +124,14 @@ namespace IMDbMovieAnalytics.API.Services
             var boxOfficeBody = await boxOfficeResponse.Content.ReadAsStringAsync();
             var boxOfficeData = JsonSerializer.Deserialize<JsonElement>(boxOfficeBody);
 
-            var boxOffice = boxOfficeData.GetProperty("data").GetProperty("title").GetProperty("worldwideGross").GetProperty("total").GetProperty("amount").GetInt64();
+            long? boxOffice = null;
+
+            if (boxOfficeData.GetProperty("data").GetProperty("title").GetProperty("worldwideGross").ValueKind != JsonValueKind.Null
+                && boxOfficeData.GetProperty("data").GetProperty("title").GetProperty("worldwideGross").GetProperty("total").ValueKind != JsonValueKind.Null
+                && boxOfficeData.GetProperty("data").GetProperty("title").GetProperty("worldwideGross").GetProperty("total").GetProperty("amount").ValueKind != JsonValueKind.Null)
+            {
+                boxOffice = boxOfficeData.GetProperty("data").GetProperty("title").GetProperty("worldwideGross").GetProperty("total").GetProperty("amount").GetInt64();
+            }
 
             // Extract data from genres
             var genresBody = await genresResponse.Content.ReadAsStringAsync();
@@ -144,19 +151,19 @@ namespace IMDbMovieAnalytics.API.Services
 
             var titleElement = awardsData.GetProperty("data").GetProperty("title");
 
-            if(titleElement.GetProperty("prestigiousAwardSummary").ValueKind != JsonValueKind.Null && 
+            if (titleElement.GetProperty("prestigiousAwardSummary").ValueKind != JsonValueKind.Null &&
                 titleElement.GetProperty("prestigiousAwardSummary").GetProperty("wins").ValueKind != JsonValueKind.Null)
             {
                 prestigiousAwardWins = titleElement.GetProperty("prestigiousAwardSummary").GetProperty("wins").GetInt32();
             };
 
-            if (titleElement.GetProperty("totalWins").ValueKind != JsonValueKind.Null && 
+            if (titleElement.GetProperty("totalWins").ValueKind != JsonValueKind.Null &&
                 titleElement.GetProperty("totalWins").GetProperty("total").ValueKind != JsonValueKind.Null)
             {
                 totalAwardWins = titleElement.GetProperty("totalWins").GetProperty("total").GetInt32();
             };
 
-            if (titleElement.GetProperty("totalNominations").ValueKind != JsonValueKind.Null && 
+            if (titleElement.GetProperty("totalNominations").ValueKind != JsonValueKind.Null &&
                 titleElement.GetProperty("totalNominations").GetProperty("total").ValueKind != JsonValueKind.Null)
             {
                 totalAwardNominations = titleElement.GetProperty("totalNominations").GetProperty("total").GetInt32();
@@ -170,7 +177,7 @@ namespace IMDbMovieAnalytics.API.Services
                 ImDbRating: rating,
                 GenreList: genres,
                 Plot: plot ?? "Unknown",
-                BoxOffice: boxOffice,
+                BoxOffice: boxOffice ?? 0,
                 PrestigiousAwardWins: prestigiousAwardWins ?? 0,
                 TotalAwardNominations: totalAwardNominations ?? 0,
                 TotalAwardWins: totalAwardWins ?? 0

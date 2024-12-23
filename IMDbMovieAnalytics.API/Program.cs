@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<IMovieApiClient, MovieApiClient>();
 builder.Services.AddScoped<IMovieAnalyticsService, MovieAnalyticsService>();
 
