@@ -1,6 +1,6 @@
 ﻿namespace IMDbMovieAnalytics.API.Models
 {
-    public record SearchMovieDTO(
+    public record SearchMovieReturnModel(
         string Id,
         string Title,
         int Year,

@@ -6,13 +6,13 @@ namespace IMDbMovieAnalytics.API.Services
     {
         private const long BlockbusterThreshold = 100_000_000;
 
-        public MovieAnalytics CalculateAnalytics(MovieAnalyticsDTO movie)
+        public MovieAnalyticsReturnModel CalculateAnalytics(MovieAnalytics movie)
         {
             var ratingMetrics = CalculateRatingMetrics(movie);
             var genreDistribution = CalculateGenreDistribution(movie);
             var awardMetrics = ExtractAwardMetrics(movie);
 
-            return new MovieAnalytics(movie.Title,
+            return new MovieAnalyticsReturnModel(movie.Title,
                                       movie.Plot,
                                       movie.Year,
                                       ratingMetrics,
@@ -20,7 +20,7 @@ namespace IMDbMovieAnalytics.API.Services
                                       awardMetrics);
         }
 
-        private RatingAnalytics CalculateRatingMetrics(MovieAnalyticsDTO movie)
+        private RatingAnalytics CalculateRatingMetrics(MovieAnalytics movie)
         {
             var ratingCategory = movie.ImDbRating switch
             {
@@ -47,12 +47,12 @@ namespace IMDbMovieAnalytics.API.Services
             );
         }
 
-        private Dictionary<string, int> CalculateGenreDistribution(MovieAnalyticsDTO movie) =>
+        private Dictionary<string, int> CalculateGenreDistribution(MovieAnalytics movie) =>
             movie.GenreList
                 .GroupBy(g => g)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-        private AwardsAnalytics ExtractAwardMetrics(MovieAnalyticsDTO movie) =>
+        private AwardsAnalytics ExtractAwardMetrics(MovieAnalytics movie) =>
             new(movie.PrestigiousAwardWins, movie.TotalAwardWins, movie.TotalAwardNominations);
     }
 }

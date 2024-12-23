@@ -4,6 +4,6 @@ namespace IMDbMovieAnalytics.API.Services
 {
     public interface IMovieAnalyticsService
     {
-        MovieAnalytics CalculateAnalytics(MovieAnalyticsDTO movie);
+        MovieAnalyticsReturnModel CalculateAnalytics(MovieAnalytics movie);
     }
 }

@@ -32,7 +32,7 @@ namespace IMDbMovieAnalytics.API.Services
             _httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", ApiSettings.RapidApiHost);
         }
 
-        public async Task<List<SearchMovieDTO>?> SearchMovieAsync(string query)
+        public async Task<List<SearchMovieReturnModel>?> SearchMovieAsync(string query)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace IMDbMovieAnalytics.API.Services
                 // Deserialize the response JSON
                 var responseData = JsonSerializer.Deserialize<JsonElement>(jsonResponse);
 
-                var movies = new List<SearchMovieDTO>();
+                var movies = new List<SearchMovieReturnModel>();
 
                 // Navigate to the "d" array inside "data"
                 if (responseData.TryGetProperty("data", out var dataElement) &&
@@ -59,7 +59,7 @@ namespace IMDbMovieAnalytics.API.Services
                         var stars = movieElement.TryGetProperty("s", out var starsElement) ? starsElement.GetString() : "Unknown";
 
                         // Add the movie to the list (missing fields filled with placeholders)
-                        movies.Add(new SearchMovieDTO(
+                        movies.Add(new SearchMovieReturnModel(
                             id,
                             title,
                             year,
@@ -77,7 +77,7 @@ namespace IMDbMovieAnalytics.API.Services
             }
         }
 
-        public async Task<MovieAnalyticsDTO?> GetMovieDetailsAsync(string tconst)
+        public async Task<MovieAnalytics?> GetMovieDetailsAsync(string tconst)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace IMDbMovieAnalytics.API.Services
             }
         }
 
-        private static async Task<MovieAnalyticsDTO> ExtractDataFromResponses(string tconst,
+        private static async Task<MovieAnalytics> ExtractDataFromResponses(string tconst,
                                                                               HttpResponseMessage overviewResponse,
                                                                               HttpResponseMessage boxOfficeResponse,
                                                                               HttpResponseMessage genresResponse,
@@ -163,7 +163,7 @@ namespace IMDbMovieAnalytics.API.Services
             };
 
             // Construct the Movie object
-            return new MovieAnalyticsDTO(
+            return new MovieAnalytics(
                 Id: tconst,
                 Title: title ?? "Unknown",
                 Year: year,

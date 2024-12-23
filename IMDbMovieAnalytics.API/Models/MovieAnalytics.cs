@@ -1,11 +1,15 @@
 ﻿namespace IMDbMovieAnalytics.API.Models
 {
     public record MovieAnalytics(
+        string Id,
         string Title,
-        string Plot,
         int Year,
-        RatingAnalytics RatingMetrics,
-        Dictionary<string, int> GenreDistribution,
-        AwardsAnalytics AwardMetrics
+        decimal ImDbRating,
+        List<string> GenreList,
+        string Plot,
+        long BoxOffice,
+        int PrestigiousAwardWins,
+        int TotalAwardWins,
+        int TotalAwardNominations
     );
 }

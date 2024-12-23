@@ -4,7 +4,7 @@ namespace IMDbMovieAnalytics.API.Services
 {
     public interface IMovieApiClient
     {
-        Task<List<SearchMovieDTO>?> SearchMovieAsync(string query);
-        Task<MovieAnalyticsDTO?> GetMovieDetailsAsync(string tconst);
+        Task<List<SearchMovieReturnModel>?> SearchMovieAsync(string query);
+        Task<MovieAnalytics?> GetMovieDetailsAsync(string tconst);
     }
 }
